@@ -16,6 +16,25 @@ data "aws_subnet_ids" "private" {
   }
 }
 
+data "aws_subnet" "public_subnets" {
+  count = length(data.aws_subnet_ids.public.ids)
+  id    = tolist(data.aws_subnet_ids.public.ids)[count.index]
+}
+
+data "aws_subnet" "private_subnets" {
+  count = length(data.aws_subnet_ids.private.ids)
+  id    = tolist(data.aws_subnet_ids.private.ids)[count.index]
+}
+
+output "subnet_public_cidr_blocks" {
+  value = [data.aws_subnet.public_subnets.*.cidr_block]
+}
+
+output "subnet_private_cidr_blocks" {
+  value = [data.aws_subnet.private_subnets.*.cidr_block]
+}
+
+
 output default_vpc {
   value = data.aws_vpc.main.id
 }
@@ -27,3 +46,4 @@ output public_subs {
 output private_subs {
   value = data.aws_subnet_ids.private.ids
 }
+
