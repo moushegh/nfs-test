@@ -12,9 +12,11 @@ packages:
   - fail2ban
 
 runcmd:
+  - sed -i -e 's/#Port 22/Port 443/g' /etc/ssh/sshd_config
+  - systemctl restart sshd
   - pip install -U pip
-  - pip install -U pyOpenSSL==17.3.0
-  - pip install -U ansible==2.4.0
+  - pip install -U pyOpenSSL
+  - pip install -U ansible
   - pip install -U awscli
 
 

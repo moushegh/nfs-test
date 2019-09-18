@@ -8,7 +8,7 @@ resource aws_instance ec2 {
   instance_type = var.ec2_type
   key_name      = var.ec2_ssh_key_name
 
-  subnet_id = var.ec2_subnet_id
+  subnet_id = var.ec2_public_subnet_id
 
   user_data         = data.template_file.bootstrap_ec2.rendered
   source_dest_check = true
@@ -26,7 +26,7 @@ resource aws_instance ec2 {
 }
 
 resource aws_network_interface ec2 {
-  subnet_id       = var.ec2_subnet_id
+  subnet_id       = var.ec2_private_subnet_id
   security_groups = ["${aws_security_group.public.id}", "${aws_security_group.private.id}"]
 
   attachment {
