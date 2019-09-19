@@ -1,5 +1,14 @@
 [all]
 
+[all:vars]
+ansible_port=443
+ansible_python_interpreter=/usr/bin/python3
 
 [client]
-18.185.113.143 ansible_user=ec2-user ansible_port=443
+3.124.3.105 ansible_user=ec2-user
+
+[gluster]
+3.124.4.20 ansible_user=ubuntu
+3.120.40.134 ansible_user=ubuntu
+18.185.248.46 ansible_user=ubuntu
+

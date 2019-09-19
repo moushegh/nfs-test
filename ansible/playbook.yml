@@ -1,0 +1,51 @@
+- hosts: all
+  become: true 
+  
+  tasks:
+    - lineinfile:  dest=/etc/hosts regexp='.*{{item}}$' line='${hostvars.${item}.ansible_default_ipv4.address} ${item}' state=present
+      only_if: is_set('${hostvars.${item}.ansible_default_ipv4.address}')
+      with_items: '{{groups.all}}'
+
+
+- hosts: gluster
+  become: true
+
+  tasks:
+    - name: Registering instance metadata to ansible facts
+      ec2_metadata_facts:
+
+    - name: Lets create /dev/xvdx partition if it not exsiting.
+      parted:
+        device: /dev/xvdx
+        number: 1
+        state: present
+
+    - name: Lets create FS on disk /dev/xvdx
+      filesystem:
+        fstype: ext4
+        dev: /dev/xvdx1
+
+    - name: Lets create directory for mount
+      file:
+        path: "/glusterfs"
+        state: directory
+        mode: 0777
+
+    - name: Lets create mount point in fstab and mount our disk (/dev/xvdx1)
+      mount:
+        path: "/glusterfs"
+        src: /dev/xvdx1
+        fstype: xfs
+        opts: rw
+        state: mounted
+
+
+
+- hosts: client
+  become: true
+
+  tasks:
+    - name: Registering instance metadata to ansible facts
+      ec2_metadata_facts:
+
+
