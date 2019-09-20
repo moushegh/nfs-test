@@ -17,7 +17,8 @@ resource aws_instance ec2 {
   associate_public_ip_address = true
 
   vpc_security_group_ids = [
-    "${aws_security_group.public.id}",
+    aws_security_group.public.id,
+    var.source_security_group_id,
   ]
 
   tags = {
@@ -28,7 +29,7 @@ resource aws_instance ec2 {
 resource aws_network_interface ec2 {
   subnet_id       = var.ec2_private_subnet_id
   security_groups = ["${aws_security_group.public.id}", "${aws_security_group.private.id}"]
-
+  source_dest_check = false
   attachment {
     instance     = "${aws_instance.ec2.id}"
     device_index = 1

@@ -21,6 +21,15 @@ resource aws_security_group_rule allow_ssh_in_ec2 {
   security_group_id = aws_security_group.public.id
 }
 
+resource aws_security_group_rule allow_gluster {
+  type              = "ingress"
+  to_port           = 0
+  protocol          = "-1"
+  from_port         = 0
+  security_group_id = aws_security_group.public.id
+  source_security_group_id = var.source_security_group_id
+}
+
 ##allow 443 since i reconfigured ssh to run under 443, thanks to corporate network
 resource aws_security_group_rule allow_https_in_ec2 {
   type              = "ingress"
@@ -53,3 +62,5 @@ resource aws_security_group_rule allow_all_in_internal {
   cidr_blocks       = var.ec2_public_subnet_cidrs
   security_group_id = aws_security_group.private.id
 }
+
+

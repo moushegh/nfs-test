@@ -10,4 +10,4 @@ variable sec_ebs {
 }
 variable zone_name {}
 variable zone_id {}
-
+variable source_security_group_id {}

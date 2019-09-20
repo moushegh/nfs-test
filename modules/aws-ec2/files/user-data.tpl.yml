@@ -7,16 +7,15 @@ packages:
   - git
   - mc
   - ntp
-  - python-pip
-  - python-boto
+  - python3-pip
+  - python3-boto
   - fail2ban
 
 runcmd:
-  - sed -i -e 's/#Port 22/Port 443/g' /etc/ssh/sshd_config
+  - sed -i -e 's/Port 22/Port 443/g' /etc/ssh/sshd_config
   - systemctl restart sshd
-  - pip install -U pip
-  - pip install -U pyOpenSSL
-  - pip install -U ansible
-  - pip install -U awscli
-
+  - echo "auto eth1" >> /etc/network/interfaces.d/50-cloud-init.cfg
+  - echo "iface eth1 inet dhcp" >> /etc/network/interfaces.d/50-cloud-init.cfg
+  - systemctl restart networking
+  - pip3 install -U awscli
 

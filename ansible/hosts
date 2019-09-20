@@ -1,14 +1,30 @@
-[all]
-
 [all:vars]
 ansible_port=443
-ansible_python_interpreter=/usr/bin/python3
+ansible_python_interpreter=/usr/bin/python
+ansible_user=ubuntu
 
 [client]
-3.124.3.105 ansible_user=ec2-user
+bastion-client-internet.virtyhost.com
+
+
 
 [gluster]
-3.124.4.20 ansible_user=ubuntu
-3.120.40.134 ansible_user=ubuntu
-18.185.248.46 ansible_user=ubuntu
+server1.virtyhost.com
+server2.virtyhost.com
+server3.virtyhost.com
 
+[private]
+server1.virtyhost.com
+server2.virtyhost.com
+server3.virtyhost.com
+
+[public]
+server1-pub.virtyhost.com
+server2-pub.virtyhost.com
+server3-pub.virtyhost.com
+
+
+[internet]
+server1-internet.virtyhost.com
+server2-internet.virtyhost.com
+server3-internet.virtyhost.com

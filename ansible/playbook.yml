@@ -1,13 +1,4 @@
-- hosts: all
-  become: true 
-  
-  tasks:
-    - lineinfile:  dest=/etc/hosts regexp='.*{{item}}$' line='${hostvars.${item}.ansible_default_ipv4.address} ${item}' state=present
-      only_if: is_set('${hostvars.${item}.ansible_default_ipv4.address}')
-      with_items: '{{groups.all}}'
-
-
-- hosts: gluster
+- hosts: internet
   become: true
 
   tasks:
@@ -22,14 +13,13 @@
 
     - name: Lets create FS on disk /dev/xvdx
       filesystem:
-        fstype: ext4
+        fstype: xfs
         dev: /dev/xvdx1
 
     - name: Lets create directory for mount
       file:
         path: "/glusterfs"
         state: directory
-        mode: 0777
 
     - name: Lets create mount point in fstab and mount our disk (/dev/xvdx1)
       mount:
@@ -39,13 +29,47 @@
         opts: rw
         state: mounted
 
+    - apt_repository:
+       filename: glusterfs
+       repo: 'ppa:gluster/glusterfs-6'
 
+    - name: Installing GlusterFS from repository
+      apt:
+        name: ['xfsprogs', 'attr', 'glusterfs-server', 'glusterfs-client']
+        state: latest
 
-- hosts: client
-  become: true
+    - name: Lets make sure GlusterFS is starting after restart
+      service:
+        name: glusterd
+        state: started
+        enabled: true
 
-  tasks:
-    - name: Registering instance metadata to ansible facts
-      ec2_metadata_facts:
+    - name: Lets create directory for brick
+      file:
+        path: "/glusterfs/brick"
+        state: directory
+
+    - name: probe gluster nodes
+      shell: "gluster peer probe  {{ item }}  >> /tmp/log.gluster.cluster"
+      with_items: '{{ groups.public }}'
+      run_once: true
+
+    - name: create gluster volume with 1 arbiter (server3) and 2 data nodes (server1 and server2)
+      gluster_volume:
+        state: "present"
+        volume: "nfs"
+        bricks: "/glusterfs/brick"
+        cluster:
+          - server1-pub.virtyhost.com
+          - server2-pub.virtyhost.com
+          - server3-pub.virtyhost.com
+        replicas: 2
+        arbiters: 1
+      run_once: true
+
+    - name: mkdir for gluster-client share
+      file:
+        path: /nfs
+        state: directory
 
 

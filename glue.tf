@@ -16,11 +16,11 @@ data aws_subnet_ids private {
   }
 }
 
-data aws_route53_zone selected  {
-  name         = "virtyhost.com."
+data aws_route53_zone selected {
+  name = "virtyhost.com."
 }
 
-data  aws_subnet public_subnets {
+data aws_subnet public_subnets {
   count = length(data.aws_subnet_ids.public.ids)
   id    = tolist(data.aws_subnet_ids.public.ids)[count.index]
 }
