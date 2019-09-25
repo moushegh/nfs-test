@@ -14,4 +14,5 @@ resource "aws_volume_attachment" "ebs_ec2" {
   device_name = "/dev/sdx"
   volume_id   = aws_ebs_volume.sec_ebs.0.id
   instance_id = aws_instance.ec2.id
+  force_detach = true
 }

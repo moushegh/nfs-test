@@ -1,12 +1,11 @@
 variable server3_type {}
-variable server3_ami {}
 variable server3_name {}
 
 
 module "nfs_server3" {
   source                  = "./modules/aws-ec2/"
   ec2_type                = var.server3_type
-  ec2_ami                 = var.server3_ami
+  ec2_ami                 = data.aws_ami.image.id
   ec2_name                = var.server3_name
   ec2_public_subnet_id    = "${element(data.aws_subnet_ids.public.ids.*, 0)}"
   ec2_private_subnet_id   = "${element(data.aws_subnet_ids.private.ids.*, 0)}"

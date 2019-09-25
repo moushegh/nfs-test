@@ -6,7 +6,8 @@ ansible_user=ubuntu
 [client]
 bastion-client-internet.virtyhost.com
 
-
+[recovery]
+server1-internet.virtyhost.com
 
 [gluster]
 server1.virtyhost.com
@@ -19,8 +20,8 @@ server2.virtyhost.com
 server3.virtyhost.com
 
 [public]
-server1-pub.virtyhost.com
 server2-pub.virtyhost.com
+server1-pub.virtyhost.com
 server3-pub.virtyhost.com
 
 

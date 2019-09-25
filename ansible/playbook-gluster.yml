@@ -1,4 +1,4 @@
-- hosts: internet
+- hosts: recovery
   become: true
 
   tasks:
@@ -29,6 +29,12 @@
         opts: rw
         state: mounted
 
+
+    - name: lets remove nfs kernel server related stuff
+      apt:
+        name: ['ctdb', 'nfs-common', 'nfs-kernel-server']
+        state: absent
+
     - apt_repository:
        filename: glusterfs
        repo: 'ppa:gluster/glusterfs-6'
@@ -37,6 +43,7 @@
       apt:
         name: ['xfsprogs', 'attr', 'glusterfs-server', 'glusterfs-client']
         state: latest
+
 
     - name: Lets make sure GlusterFS is starting after restart
       service:
@@ -63,13 +70,14 @@
           - server1-pub.virtyhost.com
           - server2-pub.virtyhost.com
           - server3-pub.virtyhost.com
-        replicas: 2
-        arbiters: 1
+        replicas: 3
       run_once: true
 
-    - name: mkdir for gluster-client share
-      file:
-        path: /nfs
-        state: directory
+#    - name: mkdir for gluster-client share
+#      file:
+#        path: /nfs
+#        state: directory
 
+#    - name: mount the /NFS from Volume from glusterfs
+#      shell: "mount -t glusterfs localhost:/nfs /nfs"
 

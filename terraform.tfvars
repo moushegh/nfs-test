@@ -7,20 +7,16 @@ ssh_key_name   = "mush"
 #nfs client
 client_name = "bastion-client"
 client_type = "t2.small"
-client_ami  = "ami-0085d4f8878cddc81"
 
 #nfs server1
 server1_name = "server1"
 server1_type = "t2.small"
-server1_ami  = "ami-0085d4f8878cddc81"
 
 #nfs server2
 server2_name = "server2"
 server2_type = "t2.small"
-server2_ami  = "ami-0085d4f8878cddc81"
 
 #nfs server3
 server3_name = "server3"
 server3_type = "t2.small"
-server3_ami  = "ami-0085d4f8878cddc81"
 

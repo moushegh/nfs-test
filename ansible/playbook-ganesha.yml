@@ -1,0 +1,58 @@
+- hosts: recovery
+  become: true
+
+  tasks:
+    - name: Registering instance metadata to ansible facts
+      ec2_metadata_facts:
+
+    - apt_repository:
+       filename: ganesha
+       repo: 'ppa:nfs-ganesha/nfs-ganesha-2.8'
+
+    - apt_repository:
+       filename: libntirpc
+       repo: 'ppa:nfs-ganesha/libntirpc-1.8'
+
+    - name: Installing ganesha from repository
+      apt:
+        name: ['nfs-ganesha', 'nfs-ganesha-vfs', 'nfs-ganesha-gluster']
+        state: latest
+
+    - name: minimal config to start and export /nfs/export
+      copy:
+        dest: /etc/ganesha/ganesha.conf
+        content: |
+          EXPORT
+          {
+              Export_Id = 77;
+              Path = /nfs/export;
+              Pseudo = /nfs/export;
+          FSAL
+          {
+              Name = GLUSTER;
+              hostname = localhost;
+              volume  = "nfs";
+              enable_upcall = true;
+              Transport = tcp; # tcp or rdma
+           }
+              Access_type = RW;
+              Squash = No_root_squash;
+              Disable_ACL = TRUE;
+              Protocols = "4";
+              Transports = "UDP","TCP";
+              SecType = "sys";
+           }
+           GLUSTER
+           {
+              pnfs_mds = true;
+           }
+              NFSv4
+           {
+              pnfs_mds = true;
+              RecoveryBackend = fs_ng;
+           }
+    - name: service ganesha enabled
+      service:
+        name: nfs-ganesha
+        enabled: true
+        state: restarted
