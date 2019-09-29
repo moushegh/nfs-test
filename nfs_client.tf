@@ -4,7 +4,7 @@ variable client_name {}
 module "nfs_client" {
   source                  = "./modules/aws-ec2/"
   ec2_type                = var.client_type
-  ec2_ami                 = data.aws_ami.image.id
+  ec2_ami                 = "ami-07b051dfb24d37ea4"
   ec2_name                = var.client_name
   ec2_public_subnet_id    = "${element(data.aws_subnet_ids.public.ids.*, 0)}"
   ec2_private_subnet_id   = "${element(data.aws_subnet_ids.private.ids.*, 0)}"

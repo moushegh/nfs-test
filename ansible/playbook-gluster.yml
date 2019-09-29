@@ -1,4 +1,4 @@
-- hosts: recovery
+- hosts: internet
   become: true
 
   tasks:
@@ -31,17 +31,24 @@
 
 
     - name: lets remove nfs kernel server related stuff
-      apt:
+      yum:
         name: ['ctdb', 'nfs-common', 'nfs-kernel-server']
         state: absent
 
-    - apt_repository:
-       filename: glusterfs
-       repo: 'ppa:gluster/glusterfs-6'
+#    - apt_repository:
+#       filename: glusterfs
+#       repo: 'ppa:gluster/glusterfs-6'
+
+
+
+    - name: Installing GlusterFS repo
+      yum:
+        name: ['centos-release-gluster6']
+        state: latest
 
     - name: Installing GlusterFS from repository
-      apt:
-        name: ['xfsprogs', 'attr', 'glusterfs-server', 'glusterfs-client']
+      yum:
+        name: ['centos-release-gluster6', 'xfsprogs', 'attr', 'glusterfs', 'glusterfs-api', 'glusterfs-cli', 'glusterfs-fuse', 'glusterfs-server']
         state: latest
 
 

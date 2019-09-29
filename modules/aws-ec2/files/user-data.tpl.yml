@@ -11,11 +11,21 @@ packages:
   - python3-boto
   - fail2ban
 
+write_files:
+  - path: /etc/yum.repos.d/ganesha.repo
+    content: |
+      [lizardfs-deps]
+      name=LizardFS Dependency Packages
+      baseurl=http://packages.lizardfs.com/yum/el7-deps/
+      enabled=1
+      gpgcheck=0
+      gpgkey=
+
 runcmd:
-  - sed -i -e 's/Port 22/Port 443/g' /etc/ssh/sshd_config
-  - systemctl restart sshd
-  - echo "auto eth1" >> /etc/network/interfaces.d/50-cloud-init.cfg
-  - echo "iface eth1 inet dhcp" >> /etc/network/interfaces.d/50-cloud-init.cfg
-  - systemctl restart networking
+  - sed -i -e 's/#Port 22/Port 443/g' /etc/ssh/sshd_config
+  - sed -i -e 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
   - pip3 install -U awscli
+  - shutdown -r now
+
+
 

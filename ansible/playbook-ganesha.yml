@@ -1,20 +1,20 @@
-- hosts: recovery
+- hosts: internet
   become: true
 
   tasks:
     - name: Registering instance metadata to ansible facts
       ec2_metadata_facts:
 
-    - apt_repository:
-       filename: ganesha
-       repo: 'ppa:nfs-ganesha/nfs-ganesha-2.8'
+#    - apt_repository:
+#       filename: ganesha
+#       repo: 'ppa:nfs-ganesha/nfs-ganesha-2.8'
 
-    - apt_repository:
-       filename: libntirpc
-       repo: 'ppa:nfs-ganesha/libntirpc-1.8'
+#    - apt_repository:
+#       filename: libntirpc
+#       repo: 'ppa:nfs-ganesha/libntirpc-1.8'
 
     - name: Installing ganesha from repository
-      apt:
+      yum:
         name: ['nfs-ganesha', 'nfs-ganesha-vfs', 'nfs-ganesha-gluster']
         state: latest
 

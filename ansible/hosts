@@ -1,7 +1,7 @@
 [all:vars]
 ansible_port=443
 ansible_python_interpreter=/usr/bin/python
-ansible_user=ubuntu
+ansible_user=centos
 
 [client]
 bastion-client-internet.virtyhost.com
